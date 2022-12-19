@@ -1,9 +1,11 @@
 package com.example.contactsapp;
 
+import com.example.contactsapp.datamodel.ContactData;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import com.example.contactsapp.datamodel.ContactData;
 
 import java.io.IOException;
 
@@ -26,4 +28,14 @@ public class HelloApplication extends Application {
         System.out.println("Init happened");
     }
 
+    @Override
+    public void stop() throws Exception{
+        try{
+            ContactData.getInstance().storeContanctsData();
+        } catch (Exception e) {
+              e.printStackTrace();
+            System.out.println("file was not saved");
+            }
+    }
 }
+

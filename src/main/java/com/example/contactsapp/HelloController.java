@@ -1,6 +1,7 @@
 package com.example.contactsapp;
 
 import com.example.contactsapp.datamodel.Contact;
+import com.example.contactsapp.datamodel.ContactData;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,7 @@ public class HelloController {
                 new Contact("Mykyta", "Ryzhan", "4412312313", "Such a cool guy"));
 
 
-
+        //Setting all the columns up
         TableColumn<Contact, String> firstNameCol = new TableColumn<>("First Name");
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         TableColumn<Contact, String> lastNameCol = new TableColumn<>("Last Name");
@@ -41,21 +43,17 @@ public class HelloController {
         phoneNumCol.setCellValueFactory(new PropertyValueFactory<>("phoneNum"));
         TableColumn<Contact, String> notesCol = new TableColumn<>("Notes");
         notesCol.setCellValueFactory(new PropertyValueFactory<>("notes"));
-
-        System.out.println(listContacts.get(0).getFirstName().getClass());
         contactsTable.getColumns().setAll(firstNameCol, lastNameCol,phoneNumCol,notesCol);
 
         ObservableList<Contact> teamMembers = FXCollections.observableArrayList(listContacts);
-        System.out.println(teamMembers);
         contactsTable.getItems().addAll(listContacts);
 
         TableView.TableViewSelectionModel<Contact> selectionModel = contactsTable.getSelectionModel();
-        selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
-        selectionModel.selectLast();
 
-        ObservableList<Contact> selectedItems =
-                selectionModel.getSelectedItems();
+        ObservableList<Contact> selectedItems = selectionModel.getSelectedItems();
 
+        ObservableList<Contact> osvblCnktkList = FXCollections.observableList(listContacts);
+        ContactData.getInstance().setContactsList(osvblCnktkList);
         selectedItems.addListener(
                 new ListChangeListener<Contact>() {
                     @Override
@@ -95,10 +93,11 @@ public class HelloController {
             DialogController controller = fxmlLoader.getController();
             Contact newContact = controller.processResault();
             contactsTable.getItems().add(newContact);
+            ContactData.getInstance().addContact(newContact);
         } else {
             System.out.println("Cancel pressed");
         }
 
     }
-    }
+}
 
